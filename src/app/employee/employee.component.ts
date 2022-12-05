@@ -4,6 +4,7 @@ import { catchError, Observable, throwError } from 'rxjs';
 import { CostSharedServiceService } from '../cost-shared-service.service';
 import { DBService } from '../db.service';
 import { EmployeetaxComponent } from '../employeetax/employeetax.component';
+import { PlantSalaryProcessService } from '../plant-salary-process.service';
 import { SalaryProcessService } from '../salary-process.service';
 import { StaffSalaryProcessService } from '../staff-salary-process.service';
 
@@ -34,11 +35,10 @@ export class EmployeeComponent implements OnInit {
     let grossSalary: number = 0;
     let netSalary: number = 0;
     let taxAmount: number = 0;
-    let workingDays: number = 0;
     let salaryProcesserBasedOnEmployeeType: SalaryProcessService
     let age: number = 0;
     let empType: string = "";
-    
+
     this.getEmployeeInfo(employeeID);
     age = this.employeeInfo[0].Age;
     empType = this.employeeInfo[0].Type
@@ -48,13 +48,6 @@ export class EmployeeComponent implements OnInit {
     //Get Employee Salary //calculate gross salary    
     grossSalary = salaryProcesserBasedOnEmployeeType.calulateGrossSalary(employeeID)
    
-    //Get Working Days
-    this.countOfWorkingdays = this.db.getTimeSheetInfo(employeeID);
-    //Get time sheet details for an employee   
-    workingDays= this.countOfWorkingdays[0].Workingdays;    
-    //Calculate Gross Salary for month
-    grossSalary = grossSalary* workingDays;
-
     //calculate tax
     //TODO: can see a lot of combintions to test. Have a method in service
     //and set various combinations separately
@@ -93,10 +86,14 @@ export class EmployeeComponent implements OnInit {
     )    
   }  
   private salaryProcessorFactory(empType : string) : SalaryProcessService{
-    switch(empType){
-      case 'Plant':
+    switch (empType) {
+      case 'Staff':
         this.salaryProcesserService = new StaffSalaryProcessService(this.db);
-    }    
+        break;
+      case 'Plant':
+        this.salaryProcesserService = new PlantSalaryProcessService(this.db);
+        break;
+    }
     return this.salaryProcesserService;
   }
 }
