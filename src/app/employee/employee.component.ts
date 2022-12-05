@@ -30,21 +30,23 @@ export class EmployeeComponent implements OnInit {
     )         
   }
   ProcessSalary(employeeID:string){
-    let empInfo : any[] = [];
-    let grossSalary : number=0;
- 
-    let netSalary : number=0;
-    let taxAmount : number=0;  
-    let workingDays : number = 0;
-
-    //Get Employee Info - Age
+    let empInfo: any[] = [];
+    let grossSalary: number = 0;
+    let netSalary: number = 0;
+    let taxAmount: number = 0;
+    let workingDays: number = 0;
+    let salaryProcesserBasedOnEmployeeType: SalaryProcessService
     let age: number = 0;
+    let empType: string = "";
+    
     this.getEmployeeInfo(employeeID);
-    age = this.employeeInfo[0].Age
+    age = this.employeeInfo[0].Age;
+    empType = this.employeeInfo[0].Type
 
-    //Get Employee Salary //calculate gross salary
-      this.salaryProcessorFactory('Plant');
-      grossSalary = this.salaryProcesserService.calulateGrossSalary(employeeID)
+    //Based on employee type, get appropriate salary calculator
+    salaryProcesserBasedOnEmployeeType = this.salaryProcessorFactory(empType);
+    //Get Employee Salary //calculate gross salary    
+    grossSalary = salaryProcesserBasedOnEmployeeType.calulateGrossSalary(employeeID)
    
     //Get Working Days
     this.countOfWorkingdays = this.db.getTimeSheetInfo(employeeID);

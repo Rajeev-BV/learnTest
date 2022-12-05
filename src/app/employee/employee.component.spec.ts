@@ -48,8 +48,9 @@ describe('EmployeeComponent', () => {
   let _http: HttpClient;
   let spy: any;
   let taxslab : any[]=[];
+  let employeeInfo: any[]=[] ; 
 
-  let employeeInfo: Observable<any>;
+  //let employeeInfo: Observable<any>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -68,6 +69,8 @@ describe('EmployeeComponent', () => {
     salaryProcessor = fixture.debugElement.injector.get(SalaryProcessService);
     component = fixture.componentInstance;  
     fixture.detectChanges();
+  
+    employeeInfo = [{ ID: 'Z001', Age: 45, Gender: 'M', Type: 'Plant' }];
    
     taxslab = [
       {slab:1000000, taxPercent:30},
@@ -92,9 +95,6 @@ describe('EmployeeComponent', () => {
   });
  
   it('should throw db exception', () => {
-    let employeeInfo: any[] = [];   
-    employeeInfo = [{ ID: 'Z001', Age: 45, Gender: 'M' }];
-
     const mockErrorResponse = { statusText: 'Bad Request' } as HttpErrorResponse
     spyOn(service, 'getEmployeeInfo').and.returnValue(throwError(mockErrorResponse));
     component.getEmployeeInfo('Z001');
@@ -109,8 +109,6 @@ describe('EmployeeComponent', () => {
 
     empInfo.push("Z001", "October", 2022, 48960);
 
-    let employeeInfo: any[]=[] ;   
-    employeeInfo = [{ ID: 'Z001', Age: 45, Gender: 'M' }];
     spy = spyOn(service, 'getEmployeeInfo').and.returnValue(of(employeeInfo));
  
     empSalaryInfo = [{ Basic_Salary: 2000, HRA: 120, Allowance: 600 }];
@@ -137,8 +135,6 @@ describe('EmployeeComponent', () => {
     let empSalaryInfo: any[] = []
     let empTimeSheetInfoInfo: any[] = []
 
-    let employeeInfo: any[]=[] ;   
-    employeeInfo = [{ ID: 'Z001', Age: 45, Gender: 'M' }];
     spy = spyOn(service, 'getEmployeeInfo').and.returnValue(of(employeeInfo));
 
     empSalaryInfo = [{ Basic_Salary: 2000, HRA: 120, Allowance: 600 }];
@@ -166,12 +162,9 @@ describe('EmployeeComponent', () => {
 
   it('should update the Net Salary tax to DOM', fakeAsync( () => {
 
-    let empInfo: any[] = [];
     let empSalaryInfo: any[] = []
     let empTimeSheetInfoInfo: any[] = []
 
-    let employeeInfo: any[]=[] ;   
-    employeeInfo = [{ ID: 'Z001', Age: 45, Gender: 'M' }];
     spy = spyOn(service, 'getEmployeeInfo').and.returnValue(of(employeeInfo));
 
     empSalaryInfo = [{ Basic_Salary: 2000, HRA: 120, Allowance: 600 }];
