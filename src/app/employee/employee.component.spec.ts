@@ -48,7 +48,8 @@ describe('EmployeeComponent', () => {
   let _http: HttpClient;
   let spy: any;
   let taxslab : any[]=[];
-  let employeeInfo: any[]=[] ; 
+  let employeeInfo_Staff: any[]=[] ; 
+  let employeeInfo_Plant: any[]=[] ; 
 
   //let employeeInfo: Observable<any>;
 
@@ -70,7 +71,8 @@ describe('EmployeeComponent', () => {
     component = fixture.componentInstance;  
     fixture.detectChanges();
   
-    employeeInfo = [{ ID: 'Z001', Age: 45, Gender: 'M', Type: 'Plant' }];
+    employeeInfo_Staff = [{ ID: 'Z001', Age: 45, Gender: 'M', Type: 'Staff' }];
+    employeeInfo_Plant = [{ ID: 'Z002', Age: 45, Gender: 'M', Type: 'Plant' }];
    
     taxslab = [
       {slab:1000000, taxPercent:30},
@@ -102,14 +104,14 @@ describe('EmployeeComponent', () => {
   });
 
 
-  it('should call Process Salary', () => {
+  it('should call Process Salary for Staff Worker', () => {
     let empInfo: any[] = [];
     let empSalaryInfo: any[] = []
     let empTimeSheetInfoInfo: any[] = []
 
     empInfo.push("Z001", "October", 2022, 48960);
 
-    spy = spyOn(service, 'getEmployeeInfo').and.returnValue(of(employeeInfo));
+    spy = spyOn(service, 'getEmployeeInfo').and.returnValue(of(employeeInfo_Staff));
  
     empSalaryInfo = [{ Basic_Salary: 2000, HRA: 120, Allowance: 600 }];
     spy = spyOn(service, 'getSalaryInfo').and.returnValue((empSalaryInfo));
@@ -130,12 +132,40 @@ describe('EmployeeComponent', () => {
    
   });
 
+  it('should call Process Salary for Plant Worker', () => {
+    let empInfo: any[] = [];
+    let empSalaryInfo: any[] = []
+    let empTimeSheetInfoInfo: any[] = []
+
+    empInfo.push("Z001", "October", 2022, 52560);
+
+    spy = spyOn(service, 'getEmployeeInfo').and.returnValue(of(employeeInfo_Plant));
+ 
+    empSalaryInfo = [{ Basic_Salary: 2000, HRA: 120, Allowance: 600 }];
+    spy = spyOn(service, 'getSalaryInfo').and.returnValue((empSalaryInfo));
+
+    empTimeSheetInfoInfo = [{ Workingdays: 20, OTHours : 2 }];
+    spy = spyOn(service, 'getTimeSheetInfo').and.returnValue(empTimeSheetInfoInfo);
+    fixture.detectChanges();
+
+    spyOn(service, 'SaveData').withArgs(empInfo).and.callThrough();
+    fixture.detectChanges();
+
+    spy = spyOn(service, 'getTaxSlabs').and.returnValue(taxslab);
+
+    component.ProcessSalary("Z001");
+    fixture.detectChanges();
+
+    expect(service.SaveData).toHaveBeenCalled();
+   
+  });
+
   it('should update the income tax to DOM - Behavior Subject', fakeAsync( () => {
     let empInfo: any[] = [];
     let empSalaryInfo: any[] = []
     let empTimeSheetInfoInfo: any[] = []
 
-    spy = spyOn(service, 'getEmployeeInfo').and.returnValue(of(employeeInfo));
+    spy = spyOn(service, 'getEmployeeInfo').and.returnValue(of(employeeInfo_Staff));
 
     empSalaryInfo = [{ Basic_Salary: 2000, HRA: 120, Allowance: 600 }];
     spy = spyOn(service, 'getSalaryInfo').and.returnValue((empSalaryInfo));
@@ -165,7 +195,7 @@ describe('EmployeeComponent', () => {
     let empSalaryInfo: any[] = []
     let empTimeSheetInfoInfo: any[] = []
 
-    spy = spyOn(service, 'getEmployeeInfo').and.returnValue(of(employeeInfo));
+    spy = spyOn(service, 'getEmployeeInfo').and.returnValue(of(employeeInfo_Staff));
 
     empSalaryInfo = [{ Basic_Salary: 2000, HRA: 120, Allowance: 600 }];
     spy = spyOn(service, 'getSalaryInfo').and.returnValue((empSalaryInfo));
