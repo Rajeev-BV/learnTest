@@ -43,10 +43,6 @@ export class EmployeeComponent implements OnInit {
     age = this.employeeInfo[0].Age
 
     //Get Employee Salary //calculate gross salary
-    //this.empSalaryInfo = this.db.getSalaryInfo(employeeID);
-    //grossSalary = (this.empSalaryInfo[0].HRA +
-      //this.empSalaryInfo[0].Basic_Salary +
-      //this.empSalaryInfo[0].Allowance)
       this.salaryProcessorFactory('Plant');
       grossSalary = this.salaryProcesserService.calulateGrossSalary(employeeID)
    
