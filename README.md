@@ -5,12 +5,25 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Use case:
 For an employee, calculate salary based on employee type & tax slab
+
+If employee type is "staff", (gross salary = Basic+ HRA + Allowance) * Working days
+
+If employee type is "plant", (gross salary = Basic+ HRA + Allowance) * Working days, in addition Over time hours needs to be considered
+
 Components:
 Employee
+
 Employee Tax
+
 
 Service:
 DBService
+
+SalaryProcessService
+
+Staff-salary-process
+
+Plant-salary-service
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
