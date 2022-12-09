@@ -51,7 +51,11 @@ export class EmployeeComponent implements OnInit {
     //calculate tax
     //TODO: can see a lot of combintions to test. Have a method in service
     //and set various combinations separately
-    taxAmount = this.Tax(grossSalary, age);
+    taxAmount = Math.floor(this.Tax(grossSalary*12, age)/12);
+    console.log('tax:' + taxAmount);
+    //taxAmount = grossSalary * 0.1;
+    //Publish the tax amount to tax component
+   this.costSharedService.changeIncomeTax(taxAmount);
     
     //calculate net salary
     netSalary = grossSalary - taxAmount;  
@@ -63,16 +67,37 @@ export class EmployeeComponent implements OnInit {
     this.db.SaveData(empInfo);
  }
 
- Tax(grossSalary:number, Age:number):number {
-  let taxslab :any[]=[];
-  let taxAmount :number=0;
+ onClick(): void{
+  console.log('Clik Event' );
 
-  taxslab = this.db.getTaxSlabs(Age);
-  //TODO: Logic to compare Gross salary with tax slabs and get the right tax percent
-  taxAmount = grossSalary * 0.1;
-  //Publish the tax amount to tax component
-  this.costSharedService.changeIncomeTax(taxAmount);
-  return taxAmount;
+  this.ProcessSalary("Z002");
+ }
+
+ Tax(grossSalary:number, Age:number):number {
+   let taxslab: any[] = [];
+   let taxAmount: number = 0;
+
+   taxslab = this.db.getTaxSlabs(Age);
+   let txAmount: number = 0;
+   let maxSlab: number = 0;
+
+   //TODO: Logic to compare Gross salary with tax slabs and get the right tax percent
+   for (var index in taxslab) {
+     maxSlab = (taxslab[index].slabMax == 0) ? grossSalary + 2 : taxslab[index].slabMax
+     if (grossSalary > taxslab[index].slabMin && grossSalary < maxSlab) {
+       txAmount = txAmount + (grossSalary - taxslab[index].slabMin) * taxslab[index].taxPercent / 100
+       break;
+     }
+
+     else {
+       txAmount = txAmount + ((taxslab[index].slabMax) - (taxslab[index].slabMin)) * (taxslab[index].taxPercent) / 100
+
+     }
+   }
+   taxAmount = txAmount;
+   
+   
+   return taxAmount;
 }  
 
   getEmployeeInfo(employeeID : string){      
@@ -97,3 +122,5 @@ export class EmployeeComponent implements OnInit {
     return this.salaryProcesserService;
   }
 }
+
+

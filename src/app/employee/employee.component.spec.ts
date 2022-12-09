@@ -75,9 +75,11 @@ describe('EmployeeComponent', () => {
     employeeInfo_Plant = [{ ID: 'Z002', Age: 45, Gender: 'M', Type: 'Plant' }];
    
     taxslab = [
-      {slab:1000000, taxPercent:30},
-      {slab:500000, taxPercent:20},
-      {slab:300000, taxPercent:10},
+      {slabMin : 0, slabMax:300000, taxPercent:0},
+      {slabMin:300000, slabMax: 500000, taxPercent:10},
+      {slabMin:500000,slabMax: 1000000,  taxPercent:20},  
+      {slabMin:1000000,slabMax: 0,  taxPercent:30},     
+      
     ]
   });
 
@@ -89,8 +91,9 @@ describe('EmployeeComponent', () => {
     
     spy = spyOn(service, 'getTaxSlabs').and.returnValue(taxslab);
 
-    [ {salary:200000, tax :20000},
-      {salary:600000, tax :60000},
+    [ {salary:200000, tax :0},
+      {salary:600000, tax :40000},
+      {salary:1200000, tax :180000},
       ].forEach(({salary,tax} ) => {
         expect(component.Tax(salary, 45)).toEqual(tax)
       })
@@ -109,7 +112,7 @@ describe('EmployeeComponent', () => {
     let empSalaryInfo: any[] = []
     let empTimeSheetInfoInfo: any[] = []
 
-    empInfo.push("Z001", "October", 2022, 48960);
+    empInfo.push("Z001", "October", 2022, 50187);
 
     spy = spyOn(service, 'getEmployeeInfo').and.returnValue(of(employeeInfo_Staff));
  
@@ -137,7 +140,7 @@ describe('EmployeeComponent', () => {
     let empSalaryInfo: any[] = []
     let empTimeSheetInfoInfo: any[] = []
 
-    empInfo.push("Z001", "October", 2022, 52560);
+    empInfo.push("Z001", "October", 2022, 53387);
 
     spy = spyOn(service, 'getEmployeeInfo').and.returnValue(of(employeeInfo_Plant));
  
@@ -186,11 +189,11 @@ describe('EmployeeComponent', () => {
     title.dispatchEvent(new Event('input'));
     tick();
     fixture1.detectChanges();
-    expect(fixture1.debugElement.query(By.css('p')).nativeElement.innerHTML).toEqual('5440');
+    expect(fixture1.debugElement.query(By.css('p')).nativeElement.innerHTML).toEqual('4213');
    
   }));
 
-  it('should update the Net Salary tax to DOM', fakeAsync( () => {
+  fit('should update the Net Salary tax to DOM - Integration test example', fakeAsync( () => {
 
     let empSalaryInfo: any[] = []
     let empTimeSheetInfoInfo: any[] = []
@@ -206,14 +209,17 @@ describe('EmployeeComponent', () => {
 
     spy = spyOn(service, 'getTaxSlabs').and.returnValue(taxslab);
 
-    component.ProcessSalary("Z001"); 
+    //component.ProcessSalary("Z001"); 
+    const button = fixture.debugElement.query(By.css('[data-testid="btnprocesssalary"]'))
+    fixture.detectChanges();
+    button.triggerEventHandler('click', null);
     fixture.detectChanges();
     let title = fixture.debugElement.query(By.css('p')).nativeElement; 
     fixture.detectChanges();
     title.dispatchEvent(new Event('input'));
     tick();
     fixture.detectChanges();
-    expect(fixture.debugElement.query(By.css('p')).nativeElement.innerHTML).toEqual('48960');
+    expect(fixture.debugElement.query(By.css('p')).nativeElement.innerHTML).toEqual('50187');
    
   }));
 
