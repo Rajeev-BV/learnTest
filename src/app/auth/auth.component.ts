@@ -8,7 +8,7 @@ import { DBService } from '../db.service';
   styleUrls: ['./auth.component.less']
 })
 export class AuthComponent implements OnInit {
-  empType:any[]=[];
+  empType:any=[];
   employeeSalary : any[] = []
   employeeTimeSheet : any[] = []
   empNetSalary:number=0;

@@ -1,0 +1,21 @@
+{
+  "fileName": "data.json",
+  "filePath": "src/assets/json/data.json",
+  "details": [
+    {
+      "id": 1,
+      "name": "AA",
+      "description": "AA Description"
+    },
+    {
+      "id": 2,
+      "name": "BB",
+      "description": "BB Description"
+    },
+    {
+      "id": 3,
+      "name": "CC",
+      "description": "CC Description"
+    }
+  ]
+}

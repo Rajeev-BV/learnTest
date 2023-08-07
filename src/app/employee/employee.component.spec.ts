@@ -13,7 +13,9 @@ import { DataserviceService } from '../dataservice.service';
 import { SalaryProcessService } from '../salary-process.service';
 
 
+
 export class DBServiceStub {
+  employeeInfo: any[] = [];  
   SaveData(empInfo:string[]) {
     return of({
       id:0
@@ -43,6 +45,7 @@ describe('EmployeeComponent', () => {
   let fixture1:ComponentFixture<EmployeetaxComponent>;
   let component1:EmployeetaxComponent;
   let service : DBService;
+  let service2 : DBService;
   let costsharedservice: CostSharedServiceService;
   let salaryProcessor: SalaryProcessService;
   let _http: HttpClient;
@@ -50,6 +53,7 @@ describe('EmployeeComponent', () => {
   let taxslab : any[]=[];
   let employeeInfo_Staff: any[]=[] ; 
   let employeeInfo_Plant: any[]=[] ; 
+  
 
   //let employeeInfo: Observable<any>;
 
@@ -99,12 +103,25 @@ describe('EmployeeComponent', () => {
       })
   });
  
-  it('should throw db exception', () => {
+  fit('should throw db exception', () => {
     const mockErrorResponse = { statusText: 'Bad Request' } as HttpErrorResponse
-    spyOn(service, 'getEmployeeInfo').and.returnValue(throwError(mockErrorResponse));
+    const http = TestBed.inject(HttpClient);
+    let employeeInfo: any[] = [];  
+    spyOn(http, 'get').and.returnValue(throwError(() => mockErrorResponse))
+    //const mockErrorResponse = { statusText: 'Bad Request' } as HttpErrorResponse
+    //spyOn(service, 'getEmployeeInfo').and.returnValue(throwError(() => mockErrorResponse));
+    //service2 = new DBService(http);
+    //service.getEmployeeInfo("Z001").subscribe(
+    ///(res:any[]) => { (employeeInfo = res)})
+
     component.getEmployeeInfo('Z001');
     expect(component.errorInfo).toBe(mockErrorResponse.statusText); 
   });
+
+  it('should operate', () => {
+    
+    expect(component.Operate(4,5)).toBe(9);
+  })
 
 
   it('should call Process Salary for Staff Worker', () => {
@@ -193,7 +210,7 @@ describe('EmployeeComponent', () => {
    
   }));
 
-  fit('should update the Net Salary tax to DOM - Integration test example', fakeAsync( () => {
+  it('should update the Net Salary tax to DOM - Integration test example', fakeAsync( () => {
 
     let empSalaryInfo: any[] = []
     let empTimeSheetInfoInfo: any[] = []

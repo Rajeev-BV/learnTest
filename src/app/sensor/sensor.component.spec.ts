@@ -57,7 +57,7 @@ describe('SensorComponent', () => {
     expect(component.sensorService.getSensorList).toHaveBeenCalled();
   });
 
-  it('should make return faulty sensors', () => {
+  fit('should make return faulty sensors', () => {
     expectedfaultysensorList.push("S1");
     fixture.detectChanges();
     faultysensorList= component.findFaultySensors();

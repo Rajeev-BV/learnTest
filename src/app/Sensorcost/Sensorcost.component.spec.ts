@@ -67,17 +67,21 @@ describe('CostComponent', () => {
     expect(faultysensorCost).toEqual(20000);
   });
 
-  it('should update the Cost in Sensor Comp via subscribe to DOM', fakeAsync( () => {
-    faultysensorCost = component.calculateTotalCostOfFaultySensors();
+  fit('should update the Cost in Sensor Comp via subscribe to DOM', fakeAsync( () => {
     fixture1 = TestBed.createComponent(SensorComponent);
     fixture1.detectChanges();
     component1 = fixture1.componentInstance;
     fixture1.detectChanges();
+
+    faultysensorCost = component.calculateTotalCostOfFaultySensors();
+    
     let title = fixture1.debugElement.query(By.css('h2')).nativeElement; 
     fixture1.detectChanges();
     title.dispatchEvent(new Event('input'));
     tick();
     fixture1.detectChanges();
+    expect(component1.faultySensorCost).toBe(20000);
+    expect(component1.cost).toBe(20000);
     expect(fixture1.debugElement.query(By.css('h2')).nativeElement.textContent).toEqual('20000');
    
   }));

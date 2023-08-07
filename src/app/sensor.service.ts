@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +11,9 @@ export class SensorService {
   constructor(private _http: HttpClient) { }
 
    getSensorList(vendorID : string, sensorState  : string): Observable<any> {
-    console.log("Senso service");
-    return this._http.get('https://reqres.in/api/users');
-    //return "aa";
+    //console.log("Senso service");
+    //return this._http.get('https://reqres.in/api/users');
+    return EMPTY;
   }
 
   getSensorRange(sensorID: string) : Observable<any>{

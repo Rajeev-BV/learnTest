@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SensorService } from '../sensor.service';
 import { CostSharedServiceService } from '../cost-shared-service.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-sensor',
@@ -12,11 +13,12 @@ export class SensorComponent implements OnInit {
   faultysensorList : any[]= [];
   sensorDataList: any[]=[];
   sensorDataRange: any[]=[];
-  faultySensorListUI:any[]= [];
+  faultySensorListUI:any= [];
   cost:number=0;
   faultySensorCost:number=0;
   vendorID:string="";
   sensorState:string = "";
+  sensorData : ISensorData[]= [];
   constructor(public sensorService: SensorService, private costSharedService : CostSharedServiceService) {
     this.costSharedService.currentCost.subscribe(sensorCost => this.faultySensorCost = sensorCost)
     //this.faultySensorCost = this.cost;
@@ -33,6 +35,9 @@ export class SensorComponent implements OnInit {
     this.sensorState = "Active";
     this.getSensorData();
     this.getSensorRange();
+    console.log("Sensors" + this.sensorData[1].sensorId)
+    console.log("Sensors" + this.sensorData[1].sensorValue)
+
    this.faultysensorList.push("S1");
    this.faultySensorListUI = this.faultysensorList;
    return this.faultysensorList;
@@ -48,6 +53,7 @@ export class SensorComponent implements OnInit {
   getSensorData(){
     this.sensorService.getSensorList(this.vendorID, this.sensorState).subscribe(
       (res) => {
+        this.sensorData = res.data; 
         this.sensorDataList = res.data;
     })
   }
@@ -55,8 +61,13 @@ export class SensorComponent implements OnInit {
   getSensorRange(){
     this.sensorService.getSensorRange("S1").subscribe(
       (res) => {
-        this.sensorDataRange = res.data;
+        this.sensorDataRange = res;
     })
   }
 
+}
+
+export interface ISensorData{
+  sensorId : number;
+  sensorValue : number;
 }

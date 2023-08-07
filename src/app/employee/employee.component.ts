@@ -1,12 +1,13 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { CostSharedServiceService } from '../cost-shared-service.service';
 import { DBService } from '../db.service';
 import { EmployeetaxComponent } from '../employeetax/employeetax.component';
 import { PlantSalaryProcessService } from '../plant-salary-process.service';
 import { SalaryProcessService } from '../salary-process.service';
 import { StaffSalaryProcessService } from '../staff-salary-process.service';
+
 
 @Component({
   selector: 'app-employee',
@@ -21,14 +22,21 @@ export class EmployeeComponent implements OnInit {
   netSalary  : number = 0;
   errorInfo:string='';
   employeeInfo: any[] = [];  
+  operator : string='';
+  jsonDataResult?: any;
+  tableRenderData?: any;
 
   constructor(public db:DBService, private costSharedService:CostSharedServiceService,
-    private salaryProcesserService:SalaryProcessService) { }
+    private salaryProcesserService:SalaryProcessService, private httpClient: HttpClient) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.costSharedService.employeeIncomeTax.subscribe(
       tax => this.empTaxAmount = tax
-    )         
+    )
+    
+    this.httpClient.get('/assets/operand.json').subscribe(
+      res => {this.jsonDataResult = res;
+       });
   }
   ProcessSalary(employeeID:string){
     let empInfo: any[] = [];
@@ -105,8 +113,9 @@ export class EmployeeComponent implements OnInit {
       (res:any[]) => { (this.employeeInfo = res)},
 
       (err: HttpErrorResponse) => {
-        this.errorInfo = (err.statusText) ;
-        return throwError(this.errorInfo)
+        this.errorInfo = ("AAAAA") ;
+        //return throwError(this.errorInfo)
+        //return ("AA")
       }     
     )    
   }  
@@ -121,6 +130,29 @@ export class EmployeeComponent implements OnInit {
     }
     return this.salaryProcesserService;
   }
+
+
+
+  Operate(a: number, b: number) : number {
+    let total: number =0;
+    console.log("Operand")
+    console.log("Operand")
+   
+       
+       this.transformData(this.jsonDataResult)
+      
+    
+      
+      return total
+       
+  }
+
+  transformData(jsonData:any){
+    const op = this.jsonDataResult[0].value[0].operator;
+  }
+
+
+
 }
 
 
