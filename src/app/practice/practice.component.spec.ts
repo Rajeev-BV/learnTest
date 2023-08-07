@@ -86,6 +86,7 @@ describe('PracticeComponent', () => {
     operator_data = [{Operator: '+' }];
     spyOn(service, 'getOperator').and.returnValue(of(operator_data));
     spyOn(service, 'postToDB')
+    
     component.arithmeticOperation(5,3);
     expect(service.getOperator).toHaveBeenCalled();
     expect(service.postToDB).toHaveBeenCalledWith(5, 3, "+", 8);
